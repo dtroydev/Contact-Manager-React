@@ -1,0 +1,40 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb-base"],
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"]
+      }
+    }
+  },
+  "rules": {
+    "no-console": "off",
+    "no-debugger": "off",
+    "newline-per-chained-call": [
+      "error", {
+        "ignoreChainWithDepth": 2
+      }
+    ],
+    "no-multiple-empty-lines": [
+      "error", {
+        "max": 1
+      }
+    ],
+    "no-use-before-define": [
+      "error", {
+        "functions": false
+      }
+    ],
+    "consistent-return": [
+      "error", {
+        "treatUndefinedAsUnspecified": true
+      }
+    ],
+    "class-methods-use-this": ["error", {
+      "exceptMethods": ["render"]
+    }]
+  }
+}
