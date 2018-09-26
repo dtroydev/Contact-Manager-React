@@ -1,13 +1,14 @@
 {
   "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb-base"],
-  "parserOptions": {
-    "sourceType": "module"
-  },
+  "parser": "babel-eslint",
   "settings": {
     "import/resolver": {
       "node": {
         "paths": ["src"]
       }
+    },
+    "react": {
+      "version": "16.5.2"
     }
   },
   "rules": {
@@ -35,6 +36,7 @@
     ],
     "class-methods-use-this": ["error", {
       "exceptMethods": ["render"]
-    }]
+    }],
+    "import/no-extraneous-dependencies": "off"
   }
 }
