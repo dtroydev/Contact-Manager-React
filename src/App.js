@@ -1,24 +1,21 @@
+// ui library
 import React, { Component } from 'react';
-import Header from './components/Header';
-import Contact from './components/Contact';
+
+// ui styling
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// ui additional components
+import Header from './components/Header';
+import Contacts from './components/Contacts';
+
+// ui root component
 export default class App extends Component {
   render() {
     return (
       <div className="App">
         <Header branding="Contact Manager" />
         <div className="container">
-          <Contact
-            name="John Doe"
-            email="jdoe@example.com"
-            phone="01 0010 0011"
-          />
-          <Contact
-            name="Karen Smith"
-            email="ksmith@example.com"
-            phone="01 0011 0100 "
-          />
+          <Contacts />
         </div>
       </div>
     );
