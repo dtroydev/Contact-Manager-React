@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Consumer } from '../../Context';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default class Contact extends Component {
@@ -11,26 +12,35 @@ export default class Contact extends Component {
   // view
   render() {
     // contact fields
-    const { name, email, phone } = this.props.contact;
+    const {
+      id, name, email, phone,
+    } = this.props.contact;
+
     // click handlers
     const onShowButtonClick = () => {
       console.log(`${this.props.contact.name} visibilty button clicked`);
-      this.setState({
-        showContactInfo: !this.state.showContactInfo,
-      });
+      this.setState(prevState => ({ showContactInfo: !prevState.showContactInfo }));
     };
 
-    const onDeleteButtonClick = () => {
+    const onDeleteButtonClick = (dispatch, deleteId) => {
       console.log(`${this.props.contact.name} delete button clicked`);
-      // go to parent
-      this.props.deleteContact(this.props.contact.id);
+      dispatch({ type: 'DELETE_CONTACT', payload: deleteId });
     };
-    // buttons
-    const deleteButton = <i onClick={onDeleteButtonClick} className="fas fa-times"
-      style={{ cursor: 'pointer', float: 'right', color: 'red' }}></i>;
 
-    const showButton = <i onClick={onShowButtonClick} className="fas fa-sort-down"
-      style={{ cursor: 'pointer' }}></i>;
+    // buttons
+    const deleteButton = <Consumer>
+      {({ dispatch }) => (
+        <i onClick={onDeleteButtonClick.bind(null, dispatch, id)}
+          className="fas fa-times"
+          style={{ cursor: 'pointer', float: 'right', color: 'red' }}>
+        </i>
+      )}
+    </Consumer>;
+
+    const showButton = <i onClick={onShowButtonClick}
+      className="fas fa-sort-down"
+      style={{ cursor: 'pointer' }}>
+    </i>;
 
     // hideable contact info
     const contactInfo = this.state.showContactInfo
@@ -56,5 +66,4 @@ Contact.propTypes = {
     email: PropTypes.string.isRequired,
     phone: PropTypes.string.isRequired,
   }),
-  deleteContact: PropTypes.func.isRequired,
 };

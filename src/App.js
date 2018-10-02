@@ -5,8 +5,11 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // ui additional components
-import Header from './components/Header';
-import Contacts from './components/Contacts';
+import Header from './components/layout/Header';
+import Contacts from './components/contacts/Contacts';
+import AddContact from './components/contacts/AddContact';
+
+import { Provider } from './Context';
 
 // ui root component
 export default class App extends Component {
@@ -15,7 +18,10 @@ export default class App extends Component {
       <div className="App">
         <Header branding="Contact Manager" />
         <div className="container">
-          <Contacts />
+          <Provider>
+            <AddContact />
+            <Contacts />
+          </Provider>
         </div>
       </div>
     );
