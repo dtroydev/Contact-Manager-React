@@ -4,10 +4,18 @@ import { Consumer } from '../../Context';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default class Contact extends Component {
-  constructor() {
-    super();
-    this.state = { showContactInfo: true };
-  }
+  // type checks
+  static propTypes = {
+    contact: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      phone: PropTypes.string.isRequired,
+    }),
+  };
+
+  // state
+  state = { showContactInfo: false };
 
   // view
   render() {
@@ -24,7 +32,7 @@ export default class Contact extends Component {
 
     const onDeleteButtonClick = (dispatch, deleteId) => {
       console.log(`${this.props.contact.name} delete button clicked`);
-      dispatch({ type: 'DELETE_CONTACT', payload: deleteId });
+      dispatch({ type: 'DELETE_CONTACT', payload: { id: deleteId } });
     };
 
     // buttons
@@ -58,12 +66,3 @@ export default class Contact extends Component {
     );
   }
 }
-
-Contact.propTypes = {
-  contact: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    phone: PropTypes.string.isRequired,
-  }),
-};

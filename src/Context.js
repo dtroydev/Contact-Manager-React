@@ -6,16 +6,22 @@ const { Provider: ContextProvider, Consumer } = React.createContext();
 
 const reducer = (state, { type, payload }) => {
   switch (type) {
-    case 'ADD_CONTACT': // provisional
+    case 'ADD_CONTACT': {
+      const { name, email, phone } = payload;
       return {
         ...state,
-        contacts: state.contacts.push(payload),
+        contacts: [{
+          id: nanoid(), name, email, phone,
+        }, ...state.contacts],
       };
-    case 'DELETE_CONTACT':
+    }
+    case 'DELETE_CONTACT': {
+      const { id } = payload;
       return {
         ...state,
-        contacts: state.contacts.filter(contact => contact.id !== payload),
+        contacts: state.contacts.filter(contact => contact.id !== id),
       };
+    }
     default:
       return state;
   }
