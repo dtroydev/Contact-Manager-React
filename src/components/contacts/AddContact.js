@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Input from '../layout/Input';
 import { Consumer } from '../../Context';
 
 export default class AddContact extends Component {
+  static propTypes = {
+    history: PropTypes.object,
+  }
+
   static stateTemplate = {
     name: '',
     email: '',
@@ -26,7 +31,6 @@ export default class AddContact extends Component {
 
   // arrow (this auto-bound) handlers
   onChange = (({ target: { name, value } }) => {
-    console.log('AddContacts.js onChange() with value', value);
     this.setState(prevState => ({
       ...prevState,
       [name]: value,
@@ -36,7 +40,6 @@ export default class AddContact extends Component {
   onSubmit = (dispatch, e) => {
     e.preventDefault();
     let { name, email, phone } = this.state;
-    console.log('AddContact.js onSubmit()');
 
     // trim whitespace
     name = name.trim();
@@ -56,13 +59,15 @@ export default class AddContact extends Component {
       return;
     }
 
-    // no errors, dispatch payload and then clear it
+    // no errors, send payload to context dispatch and then clear it
     dispatch({ type: 'ADD_CONTACT', payload: { name, email, phone } });
     this.clearState();
+
+    // go to contact list
+    this.props.history.push('/');
   }
 
   render() {
-    console.log('AddContact.js render()');
     const submitButton = () => (
       <input className="btn btn-block btn-light" type="submit" />
     );

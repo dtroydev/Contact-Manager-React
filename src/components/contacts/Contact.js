@@ -26,12 +26,10 @@ export default class Contact extends Component {
 
     // click handlers
     const onShowButtonClick = () => {
-      console.log(`${this.props.contact.name} visibilty button clicked`);
       this.setState(prevState => ({ showContactInfo: !prevState.showContactInfo }));
     };
 
     const onDeleteButtonClick = (dispatch, deleteId) => {
-      console.log(`${this.props.contact.name} delete button clicked`);
       dispatch({ type: 'DELETE_CONTACT', payload: { id: deleteId } });
     };
 
