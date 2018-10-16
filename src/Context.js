@@ -1,18 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import nanoid from 'nanoid';
+// import nanoid from 'nanoid';
+import axios from 'axios';
 
 const { Provider: ContextProvider, Consumer } = React.createContext();
 
 const reducer = (state, { type, payload }) => {
   switch (type) {
     case 'ADD_CONTACT': {
-      const { name, email, phone } = payload;
+      const {
+        id, name, email, phone,
+      } = payload;
+      let {
+        company,
+      } = payload;
+      if (company === undefined) company = { name: 'None' };
       return {
         ...state,
         contacts: [{
-          id: nanoid(), name, email, phone,
+          id, name, email, phone, company,
         }, ...state.contacts],
+      };
+    }
+    case 'UPDATE_CONTACT': {
+      const { id } = payload;
+      return {
+        ...state,
+        contacts: [...state.contacts.filter(contact => contact.id !== id), { ...payload }],
       };
     }
     case 'DELETE_CONTACT': {
@@ -28,31 +42,22 @@ const reducer = (state, { type, payload }) => {
 };
 
 export class Provider extends Component {
-  constructor() {
-    super();
+  state = {
+    contacts: [],
+    dispatch: action => this.setState(state => reducer(state, action)),
+  };
 
-    const contactsDB = [
-      ['John Doe', 'jdoe@example.com', '01 0101 1100'],
-      ['Karen Smith', 'ksmith@example.com', '01 1010 0011'],
-      ['Jack Brown', 'jbrown@example.com', '01 0012 0011'],
-      ['Vanessa Clarence', 'vclarence@example.com', '01 0330 0011'],
-    ];
-
-    this.state = {
-      contacts: contactsDB.map(([name, email, phone]) => (
-        {
-          id: nanoid(), name, email, phone,
-        }
-      )),
-      dispatch: action => this.setState(state => reducer(state, action)),
-    };
+  async componentDidMount() {
+    const url = 'https://jsonplaceholder.typicode.com/users';
+    const { data } = await axios.get(url);
+    this.setState(({ contacts: data }));
   }
 
   // addContact doesn't use 'this', so works as a Static Method
   render() {
     const { state, props: { children } } = this;
     return (
-      <ContextProvider value={state}>
+      <ContextProvider value={state} >
         {children}
       </ContextProvider>
     );

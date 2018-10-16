@@ -6,21 +6,22 @@ import axios from 'axios';
 import Input from '../layout/Input';
 import { Consumer } from '../../Context';
 
-export default class AddContact extends Component {
+export default class EditContact extends Component {
   static propTypes = {
     history: PropTypes.object,
+    match: PropTypes.object,
+    location: PropTypes.object,
   }
 
-  static stateTemplate = {
-    name: '',
-    email: '',
-    phone: '',
+  state = {
+    ...this.props
+      .location
+      .state
+      .contacts
+      .find(e => e.id === parseInt(this.props.match.params.id, 10)),
     errors: { name: '', email: '', phone: '' },
   };
 
-  state = Object.assign({}, AddContact.stateTemplate)
-
-  // arrow (this auto-bound) handlers
   onChange = (({ target: { name, value } }) => {
     this.setState(prevState => ({
       ...prevState,
@@ -49,29 +50,31 @@ export default class AddContact extends Component {
       this.setState(prevState => ({ ...prevState, errors }));
       return;
     }
-    const { data } = await axios.post('https://jsonplaceholder.typicode.com/users/', { name, email, phone });
-    dispatch({ type: 'ADD_CONTACT', payload: data });
-    // go to contact list
+    const url = `https://jsonplaceholder.typicode.com/users/${this.state.id}`;
+    const { data } = await axios.put(url, { name, email, phone });
+    dispatch({ type: 'UPDATE_CONTACT', payload: data });
+    // clear state and go to contact list
+
     this.props.history.push('/');
   }
 
   render() {
     const submitButton = () => (
-      <input className="btn btn-block btn-light" type="submit" value="Add Contact" />
+      <input className="btn btn-block btn-light" type="submit" value="Update Contact" />
     );
     const {
       name, email, phone, errors,
     } = this.state;
     return (
       <div className="card mb-3">
-        <div className="card-header">Add Contact</div>
+        <div className="card-header">Update Contact</div>
         <div className="card-body">
           <Consumer>
             {({ dispatch }) => (
               <form onSubmit={this.onSubmit.bind(null, dispatch)}>
                 <Input field="Name" value={name} onChange={this.onChange} error={errors.name} />
                 <Input field="Email" value={email} onChange={this.onChange} type="email" error={errors.email} />
-                <Input field="Phone" value={phone} onChange={this.onChange} type="number" error={errors.phone} />
+                <Input field="Phone" value={phone} onChange={this.onChange} error={errors.phone} />
                 {submitButton()}
               </form>
             )
