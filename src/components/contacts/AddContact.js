@@ -50,7 +50,7 @@ export default class AddContact extends Component {
       return;
     }
     const { data } = await axios.post('https://jsonplaceholder.typicode.com/users/', { name, email, phone });
-    dispatch({ type: 'ADD_CONTACT', payload: data });
+    dispatch({ type: 'ADD_CONTACT', payload: { ...data, id: Date.now() } });
     // go to contact list
     this.props.history.push('/');
   }

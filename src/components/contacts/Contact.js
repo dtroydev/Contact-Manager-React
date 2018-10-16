@@ -35,6 +35,8 @@ export default class Contact extends Component {
     };
 
     const onDeleteButtonClick = async (dispatch, deleteId) => {
+      // there is an intentional duplicate dispatch in catch
+      // due to mock api returning 404 for ids beyond 10
       try {
         await axios.delete(`https://jsonplaceholder.typicode.com/users/${deleteId}`);
         dispatch({ type: 'DELETE_CONTACT', payload: { id: deleteId } });

@@ -18,7 +18,7 @@ export default class EditContact extends Component {
       .location
       .state
       .contacts
-      .find(e => e.id === parseInt(this.props.match.params.id, 10)),
+      .find(contact => contact.id === parseInt(this.props.match.params.id, 10)),
     errors: { name: '', email: '', phone: '' },
   };
 
@@ -34,6 +34,7 @@ export default class EditContact extends Component {
 
     // trim whitespace
     let { name, email, phone } = this.state;
+    const { id } = this.state;
     name = name.trim();
     email = email.trim();
     phone = phone.trim();
@@ -51,8 +52,21 @@ export default class EditContact extends Component {
       return;
     }
     const url = `https://jsonplaceholder.typicode.com/users/${this.state.id}`;
-    const { data } = await axios.put(url, { name, email, phone });
-    dispatch({ type: 'UPDATE_CONTACT', payload: data });
+    const contact = {
+      id, name, email, phone,
+    };
+    // there is an intentional duplicate dispatch in catch
+    // due to mock api returning 404 for ids beyond 10
+    try {
+      const { data } = await axios.put(url, contact);
+      dispatch({ type: 'UPDATE_CONTACT', payload: data });
+    } catch (err) {
+      dispatch({
+        type: 'UPDATE_CONTACT',
+        payload: contact,
+      });
+    }
+
     // clear state and go to contact list
 
     this.props.history.push('/');
