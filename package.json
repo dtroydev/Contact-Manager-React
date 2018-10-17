@@ -6,6 +6,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.3.1",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.1.3",
     "jquery": "^3.3.1",
     "nanoid": "^1.2.4",
