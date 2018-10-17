@@ -2,6 +2,7 @@
   "name": "contactmanager",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://dtroydev.github.io/Contact-Manager-React/",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.3.1",
     "axios": "^0.18.0",
