@@ -17,17 +17,15 @@ const reducer = (state, { type, payload }) => {
       if (company === undefined) company = { name: 'None' };
       return {
         ...state,
-        contacts: [{
+        contacts: [...state.contacts, {
           id, name, email, phone, company,
-        }, ...state.contacts],
+        }],
       };
     }
     case 'UPDATE_CONTACT': {
       const { id } = payload;
-      return {
-        ...state,
-        contacts: [...state.contacts.filter(contact => contact.id !== id), { ...payload }],
-      };
+      Object.assign(state.contacts.find(c => c.id === id), payload);
+      return state;
     }
     case 'DELETE_CONTACT': {
       const { id } = payload;
