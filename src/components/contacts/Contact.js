@@ -4,15 +4,17 @@ import PropTypes from 'prop-types';
 
 class Contact extends Component {
   state = {
-    showContactInfo: false
+    showContactInfo: false,
   };
 
-  onDeleteClick = id => {
-    //// DELETE CONTACT ////
+  onDeleteClick = (id) => {
+    // // DELETE CONTACT ////
   };
 
   render() {
-    const { id, name, email, phone } = this.props.contact;
+    const {
+      id, name, email, phone,
+    } = this.props.contact;
     const { showContactInfo } = this.state;
 
     return (
@@ -20,10 +22,9 @@ class Contact extends Component {
         <h4>
           {name}{' '}
           <i
-            onClick={() =>
-              this.setState({
-                showContactInfo: !this.state.showContactInfo
-              })
+            onClick={() => this.setState({
+              showContactInfo: !this.state.showContactInfo,
+            })
             }
             className="fas fa-sort-down"
             style={{ cursor: 'pointer' }}
@@ -40,7 +41,7 @@ class Contact extends Component {
                 cursor: 'pointer',
                 float: 'right',
                 color: 'black',
-                marginRight: '1rem'
+                marginRight: '1rem',
               }}
             />
           </Link>
@@ -57,7 +58,7 @@ class Contact extends Component {
 }
 
 Contact.propTypes = {
-  contact: PropTypes.object.isRequired
+  contact: PropTypes.object.isRequired,
 };
 
 export default Contact;
