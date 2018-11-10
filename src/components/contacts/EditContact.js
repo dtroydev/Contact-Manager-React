@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import TextInputGroup from '../layout/TextInputGroup';
+import { getContact, updateContact } from '../../actions/contactActions';
 
 class EditContact extends Component {
   state = {
     name: '',
     email: '',
     phone: '',
-    errors: {}
+    errors: {},
+    placeholder: 'Loading...',
   };
+
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    this.props.getContact(id).then(() => {
+      this.setState({ ...this.state, ...this.props.contact, placeholder: null });
+    });
+  }
 
   onSubmit = (e) => {
     e.preventDefault();
 
-    const { name, email, phone } = this.state;
+    const {
+      id, name, email, phone,
+    } = this.state;
 
     // Check For Errors
     if (name === '') {
@@ -30,23 +43,16 @@ class EditContact extends Component {
       return;
     }
 
-    const updContact = {
+    const contact = {
+      id,
       name,
       email,
-      phone
+      phone,
     };
 
-    const { id } = this.props.match.params;
-
-    //// UPDATE CONTACT ////
-
+    // // UPDATE CONTACT ////
     // Clear State
-    this.setState({
-      name: '',
-      email: '',
-      phone: '',
-      errors: {}
-    });
+    this.props.updateContact(contact);
 
     this.props.history.push('/');
   };
@@ -54,8 +60,9 @@ class EditContact extends Component {
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   render() {
-    const { name, email, phone, errors } = this.state;
-
+    const {
+      name, email, phone, errors,
+    } = this.state;
     return (
       <div className="card mb-3">
         <div className="card-header">Edit Contact</div>
@@ -64,7 +71,7 @@ class EditContact extends Component {
             <TextInputGroup
               label="Name"
               name="name"
-              placeholder="Enter Name"
+              placeholder={this.state.placeholder ? this.state.placeholder : 'Enter Name...'}
               value={name}
               onChange={this.onChange}
               error={errors.name}
@@ -73,7 +80,7 @@ class EditContact extends Component {
               label="Email"
               name="email"
               type="email"
-              placeholder="Enter Email"
+              placeholder={this.state.placeholder ? this.state.placeholder : 'Enter Email...'}
               value={email}
               onChange={this.onChange}
               error={errors.email}
@@ -81,7 +88,7 @@ class EditContact extends Component {
             <TextInputGroup
               label="Phone"
               name="phone"
-              placeholder="Enter Phone"
+              placeholder={this.state.placeholder ? this.state.placeholder : 'Enter Phone...'}
               value={phone}
               onChange={this.onChange}
               error={errors.phone}
@@ -98,4 +105,18 @@ class EditContact extends Component {
   }
 }
 
-export default EditContact;
+// map relevant redux reducer state to instance prop
+const mapStateToProps = state => ({
+  contact: state.contact.contact,
+});
+
+EditContact.propTypes = {
+  match: PropTypes.object.isRequired,
+  contact: PropTypes.object.isRequired,
+  getContact: PropTypes.func.isRequired,
+  updateContact: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+};
+
+// export default EditContact;
+export default connect(mapStateToProps, { getContact, updateContact })(EditContact);

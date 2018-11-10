@@ -1,32 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Contact from './Contact';
+import { getContacts } from '../../actions/contactActions';
 
 class Contacts extends Component {
-  state = {
-    contacts: [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'john@gmail.com',
-        phone: '555-555-5555',
-      },
-      {
-        id: 2,
-        name: 'Karen Williams',
-        email: 'karen@gmail.com',
-        phone: '444-444-4444',
-      },
-      {
-        id: 3,
-        name: 'Henry Johnson',
-        email: 'henry@gmail.com',
-        phone: '333-333-333',
-      },
-    ],
-  };
+  componentDidMount() {
+    this.props.getContacts();
+  }
 
   render() {
-    const { contacts } = this.state;
+    const { contacts } = this.props;
     return (
       <React.Fragment>
         <h1 className="display-4 mb-2">
@@ -40,4 +24,19 @@ class Contacts extends Component {
   }
 }
 
-export default Contacts;
+// map relevant redux reducer state to instance prop
+const mapStateToProps = state => ({
+  contacts: state.contact.contacts,
+});
+
+Contacts.propTypes = {
+  contacts: PropTypes.array.isRequired,
+  getContacts: PropTypes.func.isRequired,
+};
+
+// if an object with functions is passed to mapDispatchToProps (2nd arg), it is assumed
+// that the functions are action creators, same key props will be created
+// essentially as follows
+// this.props[name] = function () { dispatch(actionCreate.apply(this, args)) }
+
+export default connect(mapStateToProps, { getContacts })(Contacts);
